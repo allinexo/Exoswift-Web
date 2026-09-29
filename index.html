@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Project page for ExoSwift, a GPU-parallel exoskeleton policy learning and embedded deployment pipeline."
+    />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0b3444" />
+    <title>ExoSwift | Project Page</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="brand" href="#top" aria-label="ExoSwift home">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span>ExoSwift</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="#overview">Overview</a>
+          <a href="#method">Method</a>
+          <a href="#results">Results</a>
+          <a href="#deployment">Deployment</a>
+          <a class="nav-paper" href="assets/video/exoswift-video.mp4" target="_blank" rel="noopener">Video</a>
+          <a class="nav-paper" href="assets/paper/exoswift-paper.pdf">Paper</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-grid page-shell">
+          <div class="hero-copy">
+            <p class="eyebrow">GPU-resident human-exoskeleton learning</p>
+            <h1>
+              GPU-Parallel Exoskeleton Policy Learning
+              <span>with Embedded Deployment</span>
+            </h1>
+            <p class="hero-lede">
+              ExoSwift trains a reusable assistance policy in minutes by keeping
+              musculoskeletal human-exoskeleton interaction and policy learning on the GPU,
+              then distills the policy for 100 Hz microcontroller control.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="assets/paper/exoswift-paper.pdf">
+                Read the paper
+              </a>
+              <a class="button button-secondary" href="#method">Explore the method</a>
+            </div>
+            <ul class="hero-metrics" aria-label="Headline results">
+              <li><strong>2,048</strong><span>parallel environments</span></li>
+              <li><strong>10,961</strong><span>environment steps/s</span></li>
+              <li><strong>2.03 ms</strong><span>bilateral inference</span></li>
+            </ul>
+          </div>
+
+          <figure class="hero-media">
+            <div class="media-frame media-frame-dark">
+              <img
+                src="assets/gifs/gpu-parallel.gif"
+                alt="Hundreds of muscle-actuated human and hip-exoskeleton simulations running in parallel"
+                width="900"
+                height="506"
+              />
+              <span class="media-badge">12 fps preview</span>
+            </div>
+            <figcaption>
+              <strong>GPU-parallel rollout.</strong> 256 environments are visualized; training
+              scales to 2,048 environments on one GPU.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section overview-section" id="overview">
+        <div class="page-shell overview-grid">
+          <div>
+            <p class="section-kicker">Overview</p>
+            <h2>One pipeline, from muscle-level interaction to embedded assistance</h2>
+          </div>
+          <div class="abstract-copy">
+            <p>
+              Musculoskeletal simulation can reduce physical experimentation in exoskeleton
+              controller development, but human-exoskeleton physics and real-time inference
+              remain computationally demanding. ExoSwift separates reusable human-controller
+              preparation from downstream exoskeleton policy learning and deployment.
+            </p>
+            <p>
+              A frozen muscle-actuated human policy supports GPU-parallel optimization of one
+              assistance policy across four walking speeds. Offline distillation then compresses
+              the learned torque mapping for execution on a Teensy 4.1 microcontroller.
+            </p>
+          </div>
+        </div>
+
+        <div class="page-shell metric-ribbon">
+          <article>
+            <span class="metric-value">13×</span>
+            <h3>Higher peak throughput</h3>
+            <p>Measured against the evaluated CPU-resident training baselines.</p>
+          </article>
+          <article>
+            <span class="metric-value">6.0–13.5 min</span>
+            <h3>Mean convergence time</h3>
+            <p>Across four parallelism settings and three random seeds.</p>
+          </article>
+          <article>
+            <span class="metric-value">15.2×</span>
+            <h3>Fewer policy parameters</h3>
+            <p>265,985 parameters in the teacher, 17,537 in the student.</p>
+          </article>
+          <article>
+            <span class="metric-value">0.91–0.94</span>
+            <h3>Torque-command CCC</h3>
+            <p>Mean participant-level concordance across four speeds (n = 6).</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section contrast-section" aria-labelledby="pipeline-title">
+        <div class="page-shell">
+          <div class="section-heading centered-heading">
+            <p class="section-kicker">Why GPU-resident?</p>
+            <h2 id="pipeline-title">Remove the split between simulation and learning</h2>
+            <p>
+              Conventional pipelines step complex human-exoskeleton dynamics on the CPU while
+              running policy inference and optimization on the GPU. ExoSwift keeps simulation,
+              inference, and exoskeleton policy optimization on the same device.
+            </p>
+          </div>
+
+          <figure class="pipeline-source-figure">
+            <img
+              src="assets/images/training-pipeline.png"
+              alt="CPU–GPU split training pipeline compared with the GPU-resident ExoSwift training pipeline"
+              width="1180"
+              height="742"
+              loading="lazy"
+            />
+            <figcaption>
+              CPU-based simulation transfers observations, muscle activations, and assistive
+              torques between devices at every step. ExoSwift keeps parallel human-exoskeleton
+              simulation, frozen human-policy inference, and exoskeleton-policy optimization on
+              the GPU.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section method-section" id="method">
+        <div class="page-shell">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">Method</p>
+              <h2>A staged route to a deployable exoskeleton policy</h2>
+            </div>
+            <p>
+              The method preserves muscle-level human-exoskeleton interaction during training,
+              while the final policy uses only deployable bilateral hip kinematics.
+            </p>
+          </div>
+
+          <div class="stage-grid">
+            <article class="stage-card">
+              <span class="stage-number">01</span>
+              <h3>Prepare the human controller</h3>
+              <p>
+                Continue training a pretrained muscle-actuated human policy under random
+                bilateral hip torques, then freeze it for downstream assistance learning.
+              </p>
+              <ul>
+                <li>83 joints and 354 active muscle-tendon units</li>
+                <li>Four reference speeds from 0.6 to 1.2 m/s</li>
+                <li>Perturbation curriculum up to ±15 N·m</li>
+              </ul>
+            </article>
+
+            <article class="stage-card featured-stage">
+              <span class="stage-number">02</span>
+              <h3>Train assistance in parallel</h3>
+              <p>
+                Train one exoskeleton actor-critic policy across 2,048 GPU-resident
+                human-exoskeleton environments while reusing the same frozen human policy.
+              </p>
+              <ul>
+                <li>Hip angles and angular velocities as policy inputs</li>
+                <li>Observation randomization for IMU discrepancies</li>
+                <li>Biological effort, assistive power, and torque objectives</li>
+              </ul>
+            </article>
+
+            <article class="stage-card">
+              <span class="stage-number">03</span>
+              <h3>Distill and deploy</h3>
+              <p>
+                Compress the teacher’s torque mapping offline into a compact student without
+                additional simulation rollouts, then execute it at 100 Hz on-device.
+              </p>
+              <ul>
+                <li>Teacher: 256–512–256 hidden units</li>
+                <li>Student: 128–128 hidden units</li>
+                <li>Direct Teensy 4.1 flash deployment</li>
+              </ul>
+            </article>
+          </div>
+
+          <figure class="method-overview-figure">
+            <img
+              src="assets/images/parallel-policy-training.png"
+              alt="Parallel exoskeleton policy training with a frozen pretrained human policy, domain randomization, and actor-critic learning"
+              width="1240"
+              height="922"
+              loading="lazy"
+            />
+            <figcaption>
+              <span>Parallel policy training in simulation</span>
+              A frozen human policy provides muscle activation while the exoskeleton actor-critic
+              learns assistive torque across randomized multi-speed environments.
+            </figcaption>
+          </figure>
+
+          <div class="method-media-grid">
+            <figure class="figure-card model-figure">
+              <div class="figure-image soft-image">
+                <img
+                  src="assets/images/exoskeleton-model.png"
+                  alt="Musculoskeletal human model wearing a bilateral hip exoskeleton"
+                  width="552"
+                  height="896"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>
+                <span>Human-exoskeleton model</span>
+                Device mass and inertia are attached to the pelvis and thighs; bilateral torques
+                act about the human hip joints.
+              </figcaption>
+            </figure>
+
+            <figure class="figure-card wide-figure">
+              <div class="figure-image white-image">
+                <img
+                  src="assets/images/distillation-deployment.png"
+                  alt="Teacher-to-student policy distillation followed by microcontroller deployment"
+                  width="1324"
+                  height="908"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>
+                <span>Policy compression and hardware deployment</span>
+                The compact policy reads bilateral hip IMUs, predicts torque commands, and sends
+                them to the QDD motors through CAN.
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section robustness-section">
+        <div class="page-shell feature-row">
+          <div class="feature-copy">
+            <p class="section-kicker light-kicker">Robust human policy</p>
+            <h2>Perturbation training stabilizes early exoskeleton exploration</h2>
+            <p>
+              A randomly initialized assistance policy can apply disruptive hip torques. Training
+              the human controller under randomized bilateral perturbations improves tracking
+              resilience before the exoskeleton policy begins learning.
+            </p>
+            <div class="feature-points">
+              <span><strong>Frozen</strong> during exoskeleton training</span>
+              <span><strong>Reusable</strong> across assistance objectives</span>
+            </div>
+          </div>
+          <figure class="feature-media">
+            <img
+              src="assets/gifs/perturbation-robustness.gif"
+              alt="Comparison of human motion tracking without and with perturbation training"
+              width="760"
+              height="428"
+              loading="lazy"
+            />
+            <figcaption>Tracking under random hip torques, shown at 12 fps.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section results-section" id="results">
+        <div class="page-shell">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">Training results</p>
+              <h2>Large batches turn downstream policy learning into a minutes-scale task</h2>
+            </div>
+            <p>
+              The GPU-resident trainer continues to scale beyond the point where both evaluated
+              CPU implementations saturate.
+            </p>
+          </div>
+
+          <div class="results-grid">
+            <figure class="result-card result-large">
+              <div class="result-image">
+                <img
+                  src="assets/images/training-throughput.png"
+                  alt="Training throughput and GPU memory use versus number of parallel environments"
+                  width="1532"
+                  height="558"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>
+                <span class="result-index">A</span>
+                <div>
+                  <h3>Throughput scales to 10,961 steps/s</h3>
+                  <p>
+                    At 2,048 environments, the trainer reaches 13× the peak measured CPU-baseline
+                    throughput while occupying 72% of the 16 GB GPU.
+                  </p>
+                </div>
+              </figcaption>
+            </figure>
+
+            <figure class="result-card">
+              <div class="result-image">
+                <img
+                  src="assets/images/convergence-time.png"
+                  alt="Total training time and convergence time across four environment counts"
+                  width="1254"
+                  height="684"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>
+                <span class="result-index">B</span>
+                <div>
+                  <h3>Fastest mean convergence: 6.0 min</h3>
+                  <p>
+                    The 1,024-environment setting converges fastest; all settings converge within
+                    a 6.0–13.5 min mean range across three seeds.
+                  </p>
+                </div>
+              </figcaption>
+            </figure>
+
+            <figure class="result-card">
+              <div class="result-image">
+                <img
+                  src="assets/images/multi-speed-profiles.png"
+                  alt="Joint kinematics, biological hip mechanics, and exoskeleton assistance across four walking speeds"
+                  width="1066"
+                  height="504"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>
+                <span class="result-index">C</span>
+                <div>
+                  <h3>One policy covers four walking speeds</h3>
+                  <p>
+                    The policy increases assistance with speed while preserving a consistent
+                    gait-cycle pattern, without receiving an explicit speed command.
+                  </p>
+                </div>
+              </figcaption>
+            </figure>
+
+            <figure class="result-card">
+              <div class="result-image compact-result-image">
+                <img
+                  src="assets/images/simulated-power.png"
+                  alt="Simulated biological and exoskeleton positive power across four walking speeds"
+                  width="1016"
+                  height="552"
+                  loading="lazy"
+                />
+              </div>
+              <figcaption>
+                <span class="result-index">D</span>
+                <div>
+                  <h3>22–28% lower simulated biological hip power</h3>
+                  <p>
+                    In simulation, the exoskeleton delivers 9.5–18.9 W of positive mechanical
+                    power per leg. These values are simulation outcomes, not physiological
+                    measurements.
+                  </p>
+                </div>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section demos-section" aria-labelledby="demos-title">
+        <div class="page-shell">
+          <div class="section-heading centered-heading narrow-heading">
+            <p class="section-kicker">Simulation demonstrations</p>
+            <h2 id="demos-title">Assistance adapts across the target speed range</h2>
+            <p>
+              The same policy generates stance-phase extension assistance and swing-phase flexion
+              assistance from 0.6 to 1.2 m/s.
+            </p>
+          </div>
+          <figure class="demo-wide">
+            <img
+              src="assets/gifs/four-speed-assistance.gif"
+              alt="Four synchronized simulations showing exoskeleton assistance from 0.6 to 1.2 meters per second"
+              width="760"
+              height="618"
+              loading="lazy"
+            />
+            <figcaption>
+              <span>Multi-speed assistance</span>
+              Muscle-actuated human and hip-exoskeleton simulation, with torque and power traces.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section deployment-section" id="deployment">
+        <div class="page-shell">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">Embedded deployment</p>
+              <h2>A distilled policy runs inside the 10 ms control period</h2>
+            </div>
+            <p>
+              The student policy requires 2.03 ms for bilateral inference on the Teensy 4.1—about
+              20% of the 100 Hz control period.
+            </p>
+          </div>
+
+          <div class="deployment-grid">
+            <figure class="deployment-video">
+              <img
+                src="assets/gifs/treadmill-deployment.gif"
+                alt="Participant walking on a treadmill while wearing the bilateral hip exoskeleton"
+                width="760"
+                height="362"
+                loading="lazy"
+              />
+              <figcaption>Zero-shot treadmill deployment, shown at 12 fps.</figcaption>
+            </figure>
+
+            <div class="deployment-copy">
+              <div class="distill-stats">
+                <article><strong>265,985</strong><span>teacher parameters</span></article>
+                <span class="distill-arrow" aria-hidden="true">→</span>
+                <article><strong>17,537</strong><span>student parameters</span></article>
+              </div>
+              <ul class="check-list">
+                <li>15.2× fewer parameters</li>
+                <li>15.5× faster measured bilateral inference</li>
+                <li>Same deployable kinematic inputs as the teacher</li>
+                <li>Torque filtering and limiting before CAN transmission</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="deployment-evidence">
+            <figure class="evidence-figure">
+              <img
+                src="assets/images/sim-to-real.png"
+                alt="Comparison of simulated and experimentally measured torque commands across four walking speeds"
+                width="1336"
+                height="656"
+                loading="lazy"
+              />
+              <figcaption>
+                Simulation and deployment torque-command profiles across 0.6–1.2 m/s.
+              </figcaption>
+            </figure>
+            <div class="evidence-copy">
+              <p class="mini-label">Treadmill study · n = 6</p>
+              <h3>Torque commands remain consistent from simulation to hardware</h3>
+              <p>
+                Mean participant-level torque-command CCC ranges from 0.91 to 0.94 across four
+                walking speeds, with standard deviations of 0.03–0.04.
+              </p>
+              <dl class="evidence-metrics">
+                <div><dt>RMS torque</dt><dd>7.54–8.29 N·m</dd></div>
+                <div><dt>Mean positive power</dt><dd>9.32–14.53 W</dd></div>
+                <div><dt>Positive share of absolute power</dt><dd>&gt;98%</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="paper-section" id="paper">
+        <div class="page-shell paper-card">
+          <div>
+            <p class="section-kicker light-kicker">Manuscript</p>
+            <h2>Read the paper</h2>
+            <p>
+              Full method details, experimental protocols, ablations, and references are available
+              in the manuscript.
+            </p>
+          </div>
+          <a class="button button-light" href="assets/paper/exoswift-paper.pdf">
+            Download PDF
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="page-shell footer-row">
+        <span>ExoSwift · Project page</span>
+        <span>GPU-parallel exoskeleton policy learning</span>
+      </div>
+    </footer>
+  </body>
+</html>
